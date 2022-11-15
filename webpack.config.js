@@ -5,6 +5,7 @@ module.exports = {
   entry: './src/index.js',
   devServer: {
     static: './dist',
+    hot: true
   },
   output: {
     filename: 'main.js',
@@ -21,7 +22,8 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        include: path.resolve(__dirname, 'src'),
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
     ]
   }

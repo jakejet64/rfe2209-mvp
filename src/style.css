@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas-bg-color: rgba(0, 0, 0, 0); /* transparent */
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#canvas {
+  border: 5px solid #504e52;
+  outline: none;  /* because of the 'tabindex' focus trick */
+  background-color: var(--canvas-bg-color);
+}
