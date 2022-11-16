@@ -2,6 +2,7 @@ import React from 'react';
 
 const predefinedColors = ['green', 'red', 'orange', 'cyan', 'magenta', 'lavender', 'teal'];
 let local_seed = 91651088027;
+let once = true;
 
 const Partikulz = (props) => {
 
@@ -9,7 +10,6 @@ const Partikulz = (props) => {
   const [atoms, setAtoms] = React.useState([]); // the actual atoms on the board
   const [colors, setColors] = React.useState(4); // # of different colors on the board
   const [countPerColor, setCountPerColor] = React.useState(500); // # of each color of atom on the board
-  const [backgroundColor, setBackgroundColor] = React.useState('#000000');
   const [radius, setRadius] = React.useState(2);
   const [viscosity, setViscosity] = React.useState(.7);
   const [rules, setRules] = React.useState({});
@@ -24,6 +24,7 @@ const Partikulz = (props) => {
     updateCanvasDimensions();
     setRules(randomRules());
     setAtoms(randomAtoms(countPerColor));
+    requestAnimationFrame(update);
   }, []);
 
   React.useEffect(() => {
@@ -37,7 +38,7 @@ const Partikulz = (props) => {
     let ret = {};
     for(let from = 0; from < colors; from++) {
       let fromColor = predefinedColors[from];
-      ret[fromColor] = {radius: 80};
+      ret[fromColor] = {radius: 100};
       for(let to = 0; to < colors; to++) {
         let toColor = predefinedColors[to];
         ret[fromColor][toColor] = mulberry32() * 2 - 1;
@@ -48,7 +49,7 @@ const Partikulz = (props) => {
   // Resizes canvas to match size of window
   function updateCanvasDimensions() {
     document.getElementById('canvas').width = window.innerWidth * 0.8;
-    document.getElementById('canvas').height = window.innerHeight * 0.8;
+    document.getElementById('canvas').height = window.innerHeight * .95;
   }
   // Random number generator
   function mulberry32() {
@@ -66,12 +67,14 @@ const Partikulz = (props) => {
   }
   // Generates the inital random Atoms
   function randomAtoms(numPerColor) {
+    //console.log('we get here');
     let ret = [];
     for(let i = 0; i < colors; i++) {
       for(let j = 0; j < numPerColor; j++) {
         ret.push([randomX(), randomY(), 0, 0, predefinedColors[i]]);
       }
     }
+    //console.log(ret.length);
     return ret;
   }
   // re-renders the canvas
@@ -79,8 +82,11 @@ const Partikulz = (props) => {
     updateCanvasDimensions();
     const canvas = document.getElementById('canvas');
     const temp = canvas.getContext('2d');
-    temp.fillStyle = backgroundColor;
+    temp.fillStyle = '#000000';
     temp.fillRect(0, 0, canvas.width, canvas.height);
+
+    //applyRules();
+
     atoms.forEach((atom) => {
       temp.beginPath();
       temp.arc(atom[0], atom[1], radius, 0, Math.PI * 2);
@@ -88,6 +94,8 @@ const Partikulz = (props) => {
       temp.fillStyle = atom[4];
       temp.fill();
     });
+
+    //requestAnimationFrame(update);
   }
   // steps the atoms forward a frame
   function applyRules() {
@@ -157,12 +165,28 @@ const Partikulz = (props) => {
   }
 
   return (
-    <canvas id="canvas" onClick = {() => {
-      setSeed(local_seed);
-      setRules(randomRules());
-      setAtoms(randomAtoms(countPerColor));
-    }}></canvas>
+    <div className='partikulz'>
+      <div className='controls'>
+        <button>Randomize Rules</button>
+        <input type='range' name='playbackSpeed' min='1' max='50' value={playbackSpeed} onChange={(e) => setPlaybackSpeed(e.target.val)} /> {/* Playback Speed */}
+        <input></input> {/* Number of Colors */}
+        <input></input> {/* Particles per Color */}
+        <input></input> {/* Viscosity */}
+        <input></input> {/* Gravity */}
+        <input></input> {/* Wall Repel */}
+        {/* Per color */}
+          {/* color -> color */}
+          {/* radius */}
+      </div>
+      <canvas id="canvas"></canvas>
+    </div>
   )
 }
 
 export default Partikulz;
+
+// onClick = {() => {
+//   setSeed(local_seed);
+//   setRules(randomRules());
+//   setAtoms(randomAtoms(countPerColor));
+// }}
