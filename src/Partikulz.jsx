@@ -1,8 +1,18 @@
 import React from 'react';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
+
+import GUISlider from './components/guislider.jsx';
 
 const predefinedColors = ['green', 'red', 'orange', 'cyan', 'magenta', 'lavender', 'teal'];
 let local_seed = 91651088027;
-let once = true;
+
+const StyledButton = styled(Button)`
+  width: 85%;
+  color: white;
+  border-color: white;
+  border-radius: 10px;
+`;
 
 const Partikulz = (props) => {
 
@@ -32,6 +42,8 @@ const Partikulz = (props) => {
     playing && setTimeout(applyRules, playbackSpeed);
   }, [atoms]);
 
+  React.useEffect(() => reset(), [colors, countPerColor])
+
 
   // Generates a random ruleset
   function randomRules() {
@@ -48,8 +60,8 @@ const Partikulz = (props) => {
   }
   // Resizes canvas to match size of window
   function updateCanvasDimensions() {
-    document.getElementById('canvas').width = window.innerWidth * 0.8;
-    document.getElementById('canvas').height = window.innerHeight * .95;
+    document.getElementById('canvas').width = window.innerWidth * 0.85;
+    document.getElementById('canvas').height = window.innerHeight;
   }
   // Random number generator
   function mulberry32() {
@@ -164,16 +176,23 @@ const Partikulz = (props) => {
     setAtoms(newAtoms);
   }
 
+
+  function reset() {
+    setSeed(local_seed);
+    setRules(randomRules());
+    setAtoms(randomAtoms(countPerColor));
+  }
+
   return (
     <div className='partikulz'>
       <div className='controls'>
-        <button>Randomize Rules</button>
-        <input type='range' name='playbackSpeed' min='1' max='50' value={playbackSpeed} onChange={(e) => setPlaybackSpeed(e.target.val)} /> {/* Playback Speed */}
-        <input></input> {/* Number of Colors */}
-        <input></input> {/* Particles per Color */}
-        <input></input> {/* Viscosity */}
-        <input></input> {/* Gravity */}
-        <input></input> {/* Wall Repel */}
+        <StyledButton onClick={reset} variant="outlined">New Seed</StyledButton>
+        <GUISlider name={'ms/update'} value={playbackSpeed} setValue={setPlaybackSpeed} min={1} max={1000} step={1} />
+        <GUISlider name={'colors'} value={colors} setValue={setColors} min={1} max={7} step={1} />
+        <GUISlider name={'partikulz/color'} value={countPerColor} setValue={setCountPerColor} min={5} max={1000} step={5} />
+        <GUISlider name={'viscosity'} value={viscosity} setValue={setViscosity} min={.1} max={1} step={.05} />
+        <GUISlider name={'gravity'} value={gravity} setValue={setGravity} min={0} max={5} step={.5} />
+        <GUISlider name={'wall repel'} value={wallRepel} setValue={setWallRepel} min={0} max={100} step={1} />
         {/* Per color */}
           {/* color -> color */}
           {/* radius */}
@@ -184,9 +203,3 @@ const Partikulz = (props) => {
 }
 
 export default Partikulz;
-
-// onClick = {() => {
-//   setSeed(local_seed);
-//   setRules(randomRules());
-//   setAtoms(randomAtoms(countPerColor));
-// }}

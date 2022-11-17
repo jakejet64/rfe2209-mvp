@@ -7,15 +7,39 @@
   background-color: var(--canvas-bg-color);
 }
 
-.partikuls {
+body {
+  margin: 0px;
+  background-color: black;
+}
+
+.partikulz {
   width: 100vw;
   height: 100vh;
   margin: 0px;
   display: flex;
+  justify-content: space-between;
 }
 
 .controls {
   display: flex;
   flex-direction: column;
-  width: 10vw;
+  justify-content: center;
+  gap: 5px;
+  width: calc(15vw - 10px);
+  padding: 15px;
+}
+
+.controls button {
+  align-self: center;
+}
+
+.guislider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#canvas {
+  border: 5px solid gray;
+  border-radius: 15px;
 }
