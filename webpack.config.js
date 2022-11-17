@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './src/index.js',
+  entry: './src/index.jsx',
   devServer: {
     static: './dist',
     hot: true
@@ -17,7 +17,8 @@ module.exports = {
         test: /\.jsx?/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
+          options: { presets: ['@babel/env','@babel/preset-react'] },
         },
       },
       {
